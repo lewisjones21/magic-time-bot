@@ -1,13 +1,16 @@
-const express = require("express"),
-      logger = require("morgan");
-
 const PORT = process.env.PORT || 8080,
+      express = require("express"),
+      logger = require("morgan"),
       app = express();
+
+require("dotenv").config();
 
 app.use(logger("tiny"));
 
 app.get("/tweet", async(req, res) => {
-    res.send(req.query.value);
+    const tweet = require("./twitter.js");
+    await tweet(req.query.value);
+    res.send("Tried to tweet: " + req.query.value);
 });
 
 app.listen(PORT, () => {
