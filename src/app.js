@@ -5,12 +5,19 @@ const PORT = process.env.PORT || 8080,
 
 require("dotenv").config();
 
+const Bot = require("./bot.js"),
+      bot = new Bot();
+
+bot.start();
+
 app.use(logger("tiny"));
 
-app.get("/tweet", async(req, res) => {
-    const tweet = require("./twitter.js");
-    await tweet(req.query.value);
-    res.send("Tried to tweet: " + req.query.value);
+app.get("/start", async() => {
+    await bot.start();
+});
+
+app.get("/stop", async() => {
+    await bot.stop();
 });
 
 app.listen(PORT, () => {
