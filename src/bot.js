@@ -2,27 +2,29 @@
 const tweet = require("./twitter.js"),
       later = require("./later.js");
 
-const interval = 1,
-      schedule = later.parse.text("every " + interval + " min");
-let counter = -interval;
-
 module.exports = class Bot {
     constructor() {
         this.timer = null;
     }
     async start() {
-        this.timer = later.setInterval(Bot.handleInterval, schedule);
-        await tweet("It's " + Bot.getTimeNowString() + " - Hello World!");
+        if (this.timer === null) {
+            this.timer = later.setInterval(Bot.handleInterval, Bot.getSchedule());
+            await tweet("It's " + Bot.getTimeNowString() + " - Hello World!");
+            return true;
+        }
+        return false;
     }
     async stop() {
-        this.timer.clear();
-        this.timer = null;
-        await tweet("It's " + Bot.getTimeNowString() + " - Goodbye World!");
+        if (this.timer !== null) {
+            this.timer.clear();
+            this.timer = null;
+            await tweet("It's " + Bot.getTimeNowString() + " - Goodbye World!");
+            return true;
+        }
+        return false;
     }
     static async handleInterval() {
-        counter += interval;
-        await tweet("It's " + Bot.getTimeNowString() + " - I have been alive for " + counter
-            + " minutes!");
+        await tweet(Bot.getTimeNowString() + " make a wish!");
     }
     static getTimeNowString() {
         const date = new Date();
@@ -30,5 +32,13 @@ module.exports = class Bot {
     }
     static zeroPad(numberString) {
         return ("0" + numberString).slice(-2);
+    }
+    static getSchedule() {
+        return { "schedules": [
+            { "h": [ 1 ], "m": [ 23 ] },
+            { "h": [ 12 ], "m": [ 34 ] },
+            { "h": [ 11 ], "m": [ 11 ] },
+            { "h": [ 22 ], "m": [ 22 ] }
+        ] };
     }
 };
