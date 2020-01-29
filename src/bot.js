@@ -6,10 +6,12 @@ module.exports = class Bot {
     constructor() {
         this.timer = null;
     }
-    async start() {
+    async start(silent) {
         if (this.timer === null) {
             this.timer = later.setInterval(Bot.handleInterval, Bot.getSchedule());
-            await tweet("It's " + Bot.getTimeNowString() + " - Hello World!");
+            if (!silent) {
+                await tweet("It's " + Bot.getTimeNowString() + " - Hello World!");
+            }
             return true;
         }
         return false;
