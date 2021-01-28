@@ -26,11 +26,17 @@ module.exports = class Bot {
         return false;
     }
     static async handleInterval() {
-        await tweet(Bot.getTimeNowString() + " make a wish!");
+        await tweet(Bot.getTimeNowString() + " make a wish!   ~   " + Bot.getDateNowString());
     }
     static getTimeNowString() {
         const date = new Date();
         return Bot.zeroPad(date.getHours()) + ":" + Bot.zeroPad(date.getMinutes());
+    }
+    static getDateNowString() {
+        const date = new Date();
+        return Bot.zeroPad(date.getDate()) + "/"
+            + Bot.zeroPad(date.getMonth() + 1) + "/"
+            + date.getFullYear();
     }
     static zeroPad(numberString) {
         return ("0" + numberString).slice(-2);
